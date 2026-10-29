@@ -53,7 +53,7 @@ class ApiClient {
     }
     final json = _tryDecode(response);
     final code = response.statusCode;
-    if (code >= 200 && code <= 300) return json;
+    if (code >= 200 && code < 300) return json;
     //Respuesta no exitosa: se traduce al Failure que corresponde
     throw _toFailure(code, json);
   }
