@@ -24,22 +24,29 @@ class TarjetaPedido extends StatelessWidget {
       child: ListTile(
         leading: const CircleAvatar(child: Icon(Icons.local_cafe)),
         title: Text('${pedido.bebida.name} · ${pedido.tamano.json}'),
-        subtitle: Text('Para ${pedido.cliente}'),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
+        // El estado va debajo del nombre: a la derecha solo cabe el menú
+        // sin apretar el texto en pantallas angostas.
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Chip(label: Text(_etiquetas[pedido.estado]!)),
-            if (cambiar != null && siguientes.isNotEmpty)
-              PopupMenuButton<EstadoPedido>(
+            Text('Para ${pedido.cliente}'),
+            const SizedBox(height: 6),
+            Chip(
+              label: Text(_etiquetas[pedido.estado]!),
+              visualDensity: VisualDensity.compact,
+            ),
+          ],
+        ),
+        trailing: cambiar != null && siguientes.isNotEmpty
+            ? PopupMenuButton<EstadoPedido>(
                 tooltip: 'Cambiar estado',
                 onSelected: cambiar,
                 itemBuilder: (_) => [
                   for (final e in siguientes)
                     PopupMenuItem(value: e, child: Text(_etiquetas[e]!)),
                 ],
-              ),
-          ],
-        ),
+              )
+            : null,
       ),
     );
   }
