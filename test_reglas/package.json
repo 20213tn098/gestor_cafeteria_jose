@@ -1,0 +1,13 @@
+{
+  "name": "test-reglas-cafeteria",
+  "private": true,
+  "type": "module",
+  "description": "Pruebas de firestore.rules contra el Firebase Emulator Suite",
+  "scripts": {
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^4.0.1",
+    "firebase": "^11.10.0"
+  }
+}

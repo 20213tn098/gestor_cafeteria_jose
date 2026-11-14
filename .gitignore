@@ -46,3 +46,16 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Pruebas de reglas (Node)
+test_reglas/node_modules/
+
+# Emulador y CLI de Firebase
+.firebase/
+*-debug.log
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Nunca subir llaves de servicio
+*-adminsdk-*.json
