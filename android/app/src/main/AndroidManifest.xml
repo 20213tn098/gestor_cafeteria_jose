@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Firebase Auth y Firestore necesitan red también en release. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="gestor_cafeteria"
         android:name="${applicationName}"
