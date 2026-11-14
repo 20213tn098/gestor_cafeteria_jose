@@ -19,7 +19,10 @@ void main() {
   group('validaciones', () {
     test('validarCorreo pide arroba y dominio', () {
       expect(AuthViewModel.validarCorreo('ana@utez.edu.mx'), isNull);
-      expect(AuthViewModel.validarCorreo('ana.utez'), 'Escribe un correo válido.');
+      expect(
+        AuthViewModel.validarCorreo('ana.utez'),
+        'Escribe un correo válido.',
+      );
     });
 
     test('validarContrasena pide 8 caracteres', () {
@@ -109,7 +112,10 @@ void main() {
     test('sin conexión pide revisar la red', () async {
       repo.fallaSiguiente = const SinConexion();
 
-      await vm.iniciarSesion(correo: 'ana@utez.edu.mx', contrasena: 'cafeteria');
+      await vm.iniciarSesion(
+        correo: 'ana@utez.edu.mx',
+        contrasena: 'cafeteria',
+      );
 
       expect(vm.error, 'Sin conexión. Revisa tu internet e intenta de nuevo.');
     });
@@ -117,7 +123,11 @@ void main() {
 
   test('la sesión guardada se recuerda al crear el ViewModel', () async {
     final conSesion = FakeAuthRepository(
-      inicial: const Usuario(id: 'uid-1', correo: 'ana@utez.edu.mx', nombre: 'Ana'),
+      inicial: const Usuario(
+        id: 'uid-1',
+        correo: 'ana@utez.edu.mx',
+        nombre: 'Ana',
+      ),
       personal: {'uid-1'},
     );
     final vm2 = AuthViewModel(conSesion);

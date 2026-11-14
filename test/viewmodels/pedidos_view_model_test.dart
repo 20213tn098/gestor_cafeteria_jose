@@ -14,8 +14,18 @@ void main() {
   setUp(() => repo = FakePedidoRepository());
 
   test('el cliente solo carga sus pedidos', () async {
-    await repo.crear(usuarioId: 'ana', cliente: 'Ana', bebida: Bebida.latte, tamano: Tamano.m);
-    await repo.crear(usuarioId: 'beto', cliente: 'Beto', bebida: Bebida.mocha, tamano: Tamano.s);
+    await repo.crear(
+      usuarioId: 'ana',
+      cliente: 'Ana',
+      bebida: Bebida.latte,
+      tamano: Tamano.m,
+    );
+    await repo.crear(
+      usuarioId: 'beto',
+      cliente: 'Beto',
+      bebida: Bebida.mocha,
+      tamano: Tamano.s,
+    );
     final vm = cliente();
 
     await vm.cargar();
@@ -25,8 +35,18 @@ void main() {
   });
 
   test('el personal carga todos los pedidos', () async {
-    await repo.crear(usuarioId: 'ana', cliente: 'Ana', bebida: Bebida.latte, tamano: Tamano.m);
-    await repo.crear(usuarioId: 'beto', cliente: 'Beto', bebida: Bebida.mocha, tamano: Tamano.s);
+    await repo.crear(
+      usuarioId: 'ana',
+      cliente: 'Ana',
+      bebida: Bebida.latte,
+      tamano: Tamano.m,
+    );
+    await repo.crear(
+      usuarioId: 'beto',
+      cliente: 'Beto',
+      bebida: Bebida.mocha,
+      tamano: Tamano.s,
+    );
     final vm = PedidosViewModel(repo, usuarioId: 'staff', esPersonal: true);
 
     await vm.cargar();
@@ -37,17 +57,28 @@ void main() {
   test('crear valida el nombre antes de llamar al repositorio', () async {
     final vm = cliente();
 
-    final ok = await vm.crear(cliente: '   ', bebida: Bebida.latte, tamano: Tamano.m);
+    final ok = await vm.crear(
+      cliente: '   ',
+      bebida: Bebida.latte,
+      tamano: Tamano.m,
+    );
 
     expect(ok, isFalse);
-    expect(vm.error, 'Escribe el nombre para llamar tu pedido (1 a 50 letras).');
+    expect(
+      vm.error,
+      'Escribe el nombre para llamar tu pedido (1 a 50 letras).',
+    );
     expect(repo.pedidos, isEmpty);
   });
 
   test('crear agrega el pedido y recarga la lista', () async {
     final vm = cliente();
 
-    final ok = await vm.crear(cliente: ' Ana ', bebida: Bebida.latte, tamano: Tamano.m);
+    final ok = await vm.crear(
+      cliente: ' Ana ',
+      bebida: Bebida.latte,
+      tamano: Tamano.m,
+    );
 
     expect(ok, isTrue);
     expect(vm.pedidos.single.cliente, 'Ana');
