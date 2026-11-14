@@ -70,38 +70,41 @@ void main() {
     });
 
     group('Pattern Matching / Exhaustiveness', () {
-      test('should correctly match every Failure subtype in a switch expression', () {
-        String describeFailure(Failure failure) {
-          return switch (failure) {
-            NetworkFailure() => 'network',
-            ServerFailure(statusCode: final code) => 'server: $code',
-            NotFoundFailure(message: final msg) => 'not_found: $msg',
-            ConflictFailure(message: final msg) => 'conflict: $msg',
-            ValidationFailure(fields: final f) => 'validation: ${f.length}',
-            UnexpectedFailure(statusCode: final code, message: final msg) =>
-              'unexpected: $code - $msg',
-          };
-        }
+      test(
+        'should correctly match every Failure subtype in a switch expression',
+        () {
+          String describeFailure(Failure failure) {
+            return switch (failure) {
+              NetworkFailure() => 'network',
+              ServerFailure(statusCode: final code) => 'server: $code',
+              NotFoundFailure(message: final msg) => 'not_found: $msg',
+              ConflictFailure(message: final msg) => 'conflict: $msg',
+              ValidationFailure(fields: final f) => 'validation: ${f.length}',
+              UnexpectedFailure(statusCode: final code, message: final msg) =>
+                'unexpected: $code - $msg',
+            };
+          }
 
-        expect(describeFailure(const NetworkFailure()), 'network');
-        expect(describeFailure(const ServerFailure(503)), 'server: 503');
-        expect(
-          describeFailure(const NotFoundFailure('Item missing')),
-          'not_found: Item missing',
-        );
-        expect(
-          describeFailure(const ConflictFailure('Duplicate entry')),
-          'conflict: Duplicate entry',
-        );
-        expect(
-          describeFailure(const ValidationFailure({'field': 'error'})),
-          'validation: 1',
-        );
-        expect(
-          describeFailure(const UnexpectedFailure(520, 'Unknown')),
-          'unexpected: 520 - Unknown',
-        );
-      });
+          expect(describeFailure(const NetworkFailure()), 'network');
+          expect(describeFailure(const ServerFailure(503)), 'server: 503');
+          expect(
+            describeFailure(const NotFoundFailure('Item missing')),
+            'not_found: Item missing',
+          );
+          expect(
+            describeFailure(const ConflictFailure('Duplicate entry')),
+            'conflict: Duplicate entry',
+          );
+          expect(
+            describeFailure(const ValidationFailure({'field': 'error'})),
+            'validation: 1',
+          );
+          expect(
+            describeFailure(const UnexpectedFailure(520, 'Unknown')),
+            'unexpected: 520 - Unknown',
+          );
+        },
+      );
     });
   });
 }

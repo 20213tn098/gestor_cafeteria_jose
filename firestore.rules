@@ -1,0 +1,58 @@
+rules_version = '2';
+
+// Mínimo privilegio: cada cliente crea y ve solo sus pedidos; solo el
+// personal ve todos y cambia el estado; nadie borra; cada quien ve su perfil.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // El rol "personal" es la existencia de personal/{uid}; se crea a mano.
+    function esPersonal() {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/personal/$(request.auth.uid));
+    }
+
+    // Misma tabla que EstadoPedido.siguientes en la app y que mini_backend.
+    function transicionValida(de, a) {
+      return (de == 'pending' && a in ['preparing', 'cancelled'])
+        || (de == 'preparing' && a in ['ready', 'cancelled'])
+        || (de == 'ready' && a == 'delivered');
+    }
+
+    match /pedidos/{id} {
+      allow read: if request.auth != null
+        && (resource.data.usuario_id == request.auth.uid || esPersonal());
+
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasOnly(
+             ['usuario_id', 'cliente', 'bebida', 'tamano', 'estado', 'creado'])
+        && request.resource.data.usuario_id == request.auth.uid
+        && request.resource.data.cliente is string
+        && request.resource.data.cliente.size() >= 1
+        && request.resource.data.cliente.size() <= 50
+        && request.resource.data.bebida in
+             ['espresso', 'americano', 'latte', 'cappuccino', 'mocha']
+        && request.resource.data.tamano in ['S', 'M', 'L']
+        && request.resource.data.estado == 'pending'
+        && request.resource.data.creado == request.time;
+
+      // El personal solo cambia el estado y solo por una transición válida.
+      allow update: if esPersonal()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['estado'])
+        && transicionValida(resource.data.estado, request.resource.data.estado);
+
+      allow delete: if false;
+    }
+
+    match /usuarios/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['correo', 'nombre']);
+      allow delete: if false;
+    }
+
+    match /personal/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+  }
+}
