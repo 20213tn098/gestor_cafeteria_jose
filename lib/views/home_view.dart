@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:gestor_cafeteria/components/molecules/mensaje_formulario.dart';
 import 'package:gestor_cafeteria/components/organisms/formulario_pedido.dart';
@@ -49,11 +51,17 @@ class _HomeViewState extends State<HomeView> {
       context: context,
       isScrollControlled: true,
       builder: (hoja) => Padding(
+        // Teclado abierto: viewInsets. Cerrado: la barra de navegación de
+        // Android (viewPadding), para que «Pedir» no quede debajo de ella.
         padding: EdgeInsets.fromLTRB(
           24,
           24,
           24,
-          24 + MediaQuery.viewInsetsOf(hoja).bottom,
+          24 +
+              math.max(
+                MediaQuery.viewInsetsOf(hoja).bottom,
+                MediaQuery.viewPaddingOf(hoja).bottom,
+              ),
         ),
         child: FormularioPedido(
           nombreInicial: widget.usuario.nombre,
